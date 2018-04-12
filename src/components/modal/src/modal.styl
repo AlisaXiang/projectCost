@@ -1,0 +1,233 @@
+//modal
+modal-backdrop-bg = black
+modal-backdrop-opacity = .35
+modal-content-bg = white
+modal-dialog-margin = 10px
+modal-header-height = 50px
+modal-header-border-width = 1px
+modal-header-border-color = #ccc
+modal-header-padding = 5px 15px
+modal-close-font-size = 20px
+modal-close-color = #cecece
+modal-inner-padding = 0 20px
+modal-footer-height = modal-header-height
+modal-footer-border-width = modal-header-border-width
+modal-footer-border-color = modal-header-border-color
+modal-footer-padding = modal-header-padding
+
+.modal-backdrop
+  fixed()
+  z-index z-index-modal-backdrop
+  width 100%
+  height 100%
+  background-color modal-backdrop-bg
+  &.show
+    opacity modal-backdrop-opacity
+
+.modal
+  fixed()
+  display block
+  overflow-x hidden
+  overflow-y  auto
+  outline 0
+  user-select none
+  z-index z-index-modal
+
+.modal-dialog
+  position relative
+  width auto
+  margin modal-dialog-margin
+
+.modal-content
+  position relative
+  display: flex
+  border-radius 3px
+  //adjust the layout direction
+  height 80%
+  margin 0 auto
+  flex-direction: column
+  outline: 0
+  background-color modal-content-bg
+
+.modal-header
+  display flex
+  justify-content space-between
+  align-items center
+  box-sizing border-box
+  height modal-header-height
+  padding modal-header-padding
+  border-bottom modal-header-border-width solid modal-header-border-color
+
+.modal-title
+  margin-bottom 0
+  > span
+    font-size 16px
+
+.modal-close
+  font-size modal-close-font-size
+  color modal-close-color
+  cursor pointer
+  text-align right
+
+@media screen and (min-width: 1440px)
+  .modal-body
+    max-height: 630px
+    //.table-wrap
+    //  height 560px
+    //  margin-top 32px
+@media screen and (max-width: 1400px)
+  .modal-body
+    max-height 510px
+    //.table-wrap
+    //  height 420px
+    //  margin-top 30px
+
+.modal-body
+  position relative
+  flex 1 1 auto
+  padding modal-inner-padding
+  background-color #e2e6ee
+  min-height 210px
+  //max-height 520px
+  overflow-y auto
+
+.modal-footer
+  display flex
+  //align-items center
+  //justify-content center
+  //box-sizing border-box
+  //height modal-footer-height
+  //line-height modal-footer-height
+  //padding: modal-footer-padding
+  padding 5px 20px
+  border-top: modal-footer-border-width solid modal-footer-border-color
+  > :not(:first-child)
+    margin-left .25rem
+  > :not(:last-child)
+    margin-right .25rem
+
+
+&.modal-large
+  width 90%
+
+&.modal-mediumhigh
+  width 80%
+  min-height 400px
+&.modal-medium
+  width 70%
+
+&.modal-small
+  width 50%
+
+&.modal-xsmall
+  width 30%
+&.modal-xsmallheight
+  width 30%
+  min-height 500px
+
+.cateInput
+  display inline-block
+  width 209px
+  height 26px
+  border 1px solid #ccc
+  vertical-align middle
+  overflow auto
+  line-height 18px
+  > li
+    float left
+
+.col-selbox
+  width 208px
+  height 150px
+  margin-top 15px
+  border 1px solid #ccc
+  overflow auto
+
+/*
+
+.modal-backdrop
+  fixed()
+  z-index z-index-modal-backdrop
+  width 100%
+  height 100%
+  box-sizing border-box
+  background-color modal-backdrop-bg
+  &.show
+    opacity modal-backdrop-opacity
+
+.modal
+  display block
+  position: fixed
+  top 0
+  right 0
+  bottom 0
+  outline 0
+  overflow-x hidden
+  overflow-y auto
+  user-select none
+  z-index z-index-modal
+  &.modal-large
+    width 90%
+
+  &.modal-small
+    width 50%
+
+
+
+.modal-dialog
+  position: relative
+  width auto
+  margin modal-dialog-margin
+  border 1px solid #ccc
+  border-radius 3px
+
+.modal-content
+  position relative
+  display: flex
+  border-radius 3px
+  //adjust the layout direction
+  flex-direction: column
+  outline: 0
+  background-color modal-content-bg
+
+.modal-header
+  display flex
+  justify-content space-between
+  align-items center
+  box-sizing border-box
+  height modal-header-height
+  padding modal-header-padding
+  border-bottom modal-header-border-width solid modal-header-border-color
+
+.modal-title
+  margin-bottom: 0
+
+.modal-close
+  font-size modal-close-font-size
+  color modal-close-color
+  cursor pointer
+
+.modal-body
+  position relative
+  box-sizing border-box
+  flex 1 1 auto
+  padding modal-inner-padding
+
+.modal-footer
+  display flex
+  align-items center
+  justify-content center
+  box-sizing border-box
+  height modal-footer-height
+  padding: modal-footer-padding
+  border-top: modal-footer-border-width solid modal-footer-border-color
+  > :not(:first-child)
+    margin-left .25rem
+  > :not(:last-child)
+    margin-right .25rem
+
+
+
+
+
+*/
