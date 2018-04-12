@@ -1,6 +1,6 @@
 # vue-node
 
-> 码云地址 https://gitee.com/xiangfang1992/vue-node-cost.git
+> git 地址：https://github.com/AlisaXiang/projectCost.git
 
 > 本项目是采用element-ui的ui组件框架，结合webpack 打包的vue单页面后台系统。API接口是用Nodejs express框架。  
 

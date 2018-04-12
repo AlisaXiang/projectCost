@@ -1,0 +1,24 @@
+######################
+# Node
+######################
+/node/**
+/node_tmp/**
+/node_modules/**
+
+######################
+.idea/**
+*.iml
+*.iws
+*.ipr
+*.ids
+*.orig
+
+
+######################
+# ESLint
+######################
+.eslintcache
+/target/
+.idea
+/dist
+/dist.tar.gz
