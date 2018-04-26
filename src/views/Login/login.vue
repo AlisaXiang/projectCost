@@ -52,8 +52,10 @@
                     roleIds:sessionStorage.getItem('roleIds')
                 })).then(res => {
                     if (res.data.code == 1) {
-                        let menu=res.data.resourceId.split(',');
-                        sessionStorage.setItem('menuPermission',menu);
+                        if(res.data.resourceId){
+                            let menu=res.data.resourceId.split(',');
+                            sessionStorage.setItem('menuPermission',menu);
+                        }      
                     } else {
                         this.$message.error("错误！")
                     }

@@ -47,6 +47,9 @@ export default {
       },
       quit(){
         sessionStorage.removeItem('name');
+        sessionStorage.removeItem('dep');
+        sessionStorage.removeItem('roleIds');
+        sessionStorage.removeItem('menuPermission');
         this.$router.push("/");
       }
   }

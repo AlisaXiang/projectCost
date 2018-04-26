@@ -12,7 +12,7 @@
         <el-table
                 :data="list"
                 tooltip-effect="dark"
-                height="580"
+                height="450"
                 style="width: 100%"
                 @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55">

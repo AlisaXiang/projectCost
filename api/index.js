@@ -159,7 +159,9 @@ var server = app.listen(3000, function () {
 })
 // 获取杂费单价信息
 app.post('/getOtherPrice', function (req, res) {
-    sql.query('SELECT id,dept_id, cate_id,price ,1 as isFlag FROM t_dept_cate;', function (err, rows) {
+    let pageSize = parseInt(req.body.pageSize);
+    let pageNum = (parseInt(req.body.pageNum) - 1) * pageSize;
+    sql.query('SELECT id,dept_id, cate_id,price ,1 as isFlag,(select count(1) from t_dept_cate)as count FROM t_dept_cate LIMIT ? ,?;',[pageNum, pageSize], function (err, rows) {
         if (err) {
             res.send({code: 0})
         } else {
@@ -274,8 +276,8 @@ app.post('/getRoleInfos', function (req, res) {
 // 获取员工信息
 app.post('/getEmpInfos', function (req, res) {
     //准备sql分页查询的语句
-    var pageSize = parseInt(req.body.pageSize);
-    var pageNum = (parseInt(req.body.pageNum) - 1) * pageSize;
+    let pageSize = parseInt(req.body.pageSize);
+    let pageNum = (parseInt(req.body.pageNum) - 1) * pageSize;
     sql.query('SELECT 1 AS isFlag, 1 AS isNew ,u.`name`,GROUP_CONCAT(r.`role_id`) AS role_id ,u.`name`, u.id,u.`fun_group`,u.`fun_name`,u.`level_id`,u.`dept_id`, t.`price` FROM auth_user_role r LEFT JOIN t_user u ON r.user_id = u.id LEFT JOIN t_level t ON u.`level_id` = t.`id` GROUP BY u.`id` LIMIT ? ,?;', [pageNum, pageSize], function (err, rows) {
         if (err) {
             console.log(err);
@@ -324,15 +326,15 @@ app.post('/addEmpInfo', function (req, res) {
     console.log(roles);
 //准备员工信息
     for (let i = 0; i < data.length; i++) {
-        list[i] = [data[i].empId, data[i].empName, data[i].levelId, data[i].deptId, data[i].funGroup, data[i].funName, new Date()]
+        list[i] = [data[i].empId, data[i].empName,'123456', data[i].levelId, data[i].deptId, data[i].funGroup, data[i].funName, new Date()]
     }
 //执行插入用户角色表sql
     sql.query('INSERT INTO auth_user_role(user_id,role_id,create_time)VALUES ?', [roles], function (err1) {
         if (err1) {
             console.log(err1);
         } else {
-//执行插入员工Sql
-            sql.query('INSERT INTO t_user (id,NAME,level_id,dept_id,fun_group,fun_name,create_time) VALUES ?', [list], function (err2) {
+//执行插入员工
+            sql.query('INSERT INTO t_user (id,NAME,password,level_id,dept_id,fun_group,fun_name,create_time) VALUES ?', [list], function (err2) {
                 if (err1 || err2) {
                     console.log(err2);
                     res.send({code: 0})

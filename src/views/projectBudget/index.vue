@@ -28,7 +28,7 @@
                 height="520"
                 border
                 @selection-change="handleSelectionChange"
-                @cell-dblclick="open">
+        >
             <el-table-column type="selection" width="55">
             </el-table-column>
             <el-table-column label="项目名称" width="240">
@@ -135,7 +135,7 @@
             </el-table-column>
             <el-table-column label="操作" width="120">
                 <template slot-scope="scope">
-                    <el-button v-show="scope.row.id && userName === scope.row.leader_name" type="primary" @click="getBudgetDetails(scope.row)">预算详情</el-button>
+                    <el-button v-show="scope.row.id && (userName === scope.row.leader_name || userName === 'ADMINISTRATOR')" type="primary" @click="getBudgetDetails(scope.row)">预算详情</el-button>
                 </template>
             </el-table-column>
         </el-table>

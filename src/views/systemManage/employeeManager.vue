@@ -10,7 +10,6 @@
             </div>
         </div>
         <el-table
-
                 :data="list"
                 tooltip-effect="dark"
                 height="450"

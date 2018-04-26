@@ -129,8 +129,8 @@
             </el-table-column>
             <el-table-column label="操作" width="240">
                 <template slot-scope="scope">
-                    <el-button v-show="scope.row.id" type="primary" @click="getCostDetails(scope.row)">成本明细</el-button>
-                    <el-button v-show="scope.row.id" type="primary" @click="getTeamAttendance(scope.row)">组员考勤
+                    <el-button v-show="scope.row.id && (userName === scope.row.leader_name || userName === 'ADMINISTRATOR')" type="primary" @click="getCostDetails(scope.row)">成本明细</el-button>
+                    <el-button v-show="scope.row.id && (userName === scope.row.leader_name || userName === 'ADMINISTRATOR')" @click="getTeamAttendance(scope.row)">组员考勤
                     </el-button>
                 </template>
             </el-table-column>
@@ -159,6 +159,7 @@
     export default {
         data() {
             return {
+                userName:sessionStorage.getItem('name'),
                 projectName: '',
                 projectOwnerName: '',
                 projectStatus: '',

@@ -12,7 +12,7 @@
         <el-table
                 :data="list"
                 tooltip-effect="dark"
-                height="250"
+                height="450"
                 style="width: 100%"
                 @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55">
@@ -50,21 +50,34 @@
                              <template slot-scope="scope">
                                  <el-button type="text" @click="scope.row.isFlag = 2" v-show=" scope.row.id && scope.row.isFlag === 1">编辑</el-button>
                                  <el-button type="text" @click="editSave(scope.row)" v-show=" scope.row.id && scope.row.isFlag === 2">确定</el-button>
-                                 <el-button type="text" @click="getList()" v-show=" scope.row.id && scope.row.isFlag === 2">取消</el-button>
+                                 <el-button type="text" @click="getList(pageNum,pageSize)" v-show=" scope.row.id && scope.row.isFlag === 2">取消</el-button>
                              </template>
                          </el-table-column>
                      </el-table>
+       
+       
+        
         <el-dialog
                 title="确认"
                 :visible.sync="dialogVisible"
                 width="30%"
                 :before-close="handleClose">
             <span>是否确认进行该操作</span>
-            <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="editSave">确 定</el-button>
-  </span>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="editSave">确 定</el-button>
+            </div>
         </el-dialog>
+        <el-pagination
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="pageNum"
+                    :page-sizes="[10, 20]"
+                    :page-size = "pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="count">
+            </el-pagination>
     </div>
 </template>
 <style lang="stylus" src="../../style/index.styl" scoped></style>
@@ -82,13 +95,16 @@ export default {
                     region: ''
                 },
             editRow:[],
-            dialogVisible: false
+            dialogVisible: false,
+            pageNum:1,
+            pageSize:10,
+            count:0,
         }
     },
     created(){
-    this.getCateInfo();
-    this.getDeptInfo();
-    this.getList();
+        this.getCateInfo();
+        this.getDeptInfo();
+        this.getList(this.pageNum,this.pageSize);
     },
     methods: {
         handleSelectionChange(val){
@@ -103,7 +119,7 @@ export default {
             })).then(res=>{
                 if(res.data.code==1){
                     this.dialogVisible = false;
-                    this.getList();
+                    this.getList(this.pageNum,this.pageSize);
                 }else{
                     this.$message.error("级别信息修改失败！")
                 }
@@ -116,16 +132,32 @@ export default {
                 })
                 .catch(_ => {});
         },
-        getList(){
-            this.$ajax.post('http://127.0.0.1:3000/getOtherPrice').then(res=>{
+        getList(num,size){
+            this.$ajax.post('http://127.0.0.1:3000/getOtherPrice',this.$qs.stringify({
+                    pageNum:num,
+                    pageSize:size
+                })).then(res=>{
                 if(res.data.code==1){
                     this.list = res.data.otherPrice;
+                    this.count=this.list[0].count;
+                
                 }else{
                     this.$message.error("杂费信息获取失败！")
                 }
             })
         },
-         getDeptInfo(){
+        handleSizeChange(val) {
+            this.pageSize = val;
+            //调用分页方法进行分页
+            this.getList(this.pageNum,val);
+        },
+        //获取当前页数,点击之后触发事件
+        handleCurrentChange(val) {
+            this.currentPage = val;
+            //调用分页方法进行分页
+            this.getList(val,this.pageSize);
+        },
+        getDeptInfo(){
                     this.$ajax.post('http://127.0.0.1:3000/getDeptIds').then(res=>{
                         if(res.data.code==1){
                             this.deptOptions = res.data.deptIds;
@@ -163,7 +195,7 @@ export default {
                         type: 'success',
                         message: '数据新增成功'
                     });
-                    this.getList();
+                    this.getList(this.pageNum,this.pageSize);
                 }else{
                     this.$message.error("杂费信息新增失败！")
                 }
@@ -190,7 +222,7 @@ export default {
                             type: 'success',
                             message: '数据删除成功'
                         });
-                        this.getList();
+                        this.getList(this.pageNum,this.pageSize);
                     }else{
                         this.$message.error("级别删除信息失败！")
                     }
