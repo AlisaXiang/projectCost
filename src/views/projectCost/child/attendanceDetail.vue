@@ -416,7 +416,7 @@
         }
     }
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
     .form-content
         display: inline-block
         width 30%

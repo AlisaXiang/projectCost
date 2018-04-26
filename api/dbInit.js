@@ -1,57 +1,55 @@
 var sql = require('./connect');
 const NAME = 'ADMINISTRATOR';
 const PASSWORD = '123456';
-const cateList=[{
-    name:'本地项目',
-    create_tiem:new Date(),
-    update_time:new Date()
-},{
-    name:'内部项目',
-    create_tiem:new Date(),
-    update_time:new Date()
-},{
-    name:'外地项目有FB',
-    create_tiem:new Date(),
-    update_time:new Date()
-},{
-    name:'外地项目无FB',
-    create_tiem:new Date(),
-    update_time:new Date()
-}];
-const deptList=[{
-    name:'技术一部'
-},{
-    name:'技术二部'
-},{
-    name:'外部门'
-},{
-    name:'外部门非本部门报销'
-}];
-const menuList=[{
-  id:1, name:'后台管理',parent_id:0
-},{
-  id:2, name:'项目预算总揽',parent_id:0
-},{
-  id:3, name:'项目成本统计',parent_id:0
-},{
-  id:4, name:'部门人员出勤统计',parent_id:0
-},{
-  id:5, name:'项目成本统计总览',parent_id:0
-},{
-  id:101, name:'级别单价管理',parent_id:1
-},{
-  id:102, name:'杂项单价管理',parent_id:1
-},{
-  id:103, name:'人员管理',parent_id:1
-},{
-  id:104, name:'角色管理',parent_id:1
-},{
-  id:301, name:'项目成本统计明细',parent_id:3
-},{
-  id:302, name:'项目组成员考勤',parent_id:3
-},{
-  id:303, name:'项目基本信息',parent_id:3
-}];
+const cateList=new Array();
+cateList[0]=['本地项目',new Date(),new Date()];
+cateList[1]=['内部项目',new Date(),new Date()];
+cateList[2]=['外地项目有FB',new Date(),new Date()];
+cateList[3]=['外地项目无FB',new Date(),new Date()];
+const deptList=new Array();
+deptList[0]=['技术一部'];
+deptList[1]=['技术二部'];
+deptList[2]=['外部门'];
+deptList[3]=['外部门非本部门报销'];
+const menuList=new Array();
+menuList[0]=[1,'后台管理',0];
+menuList[1]=[2,'项目预算总揽',0];
+menuList[2]=[3,'项目成本统计',0];
+menuList[3]=[4,'部门人员出勤统计',0];
+menuList[4]=[5,'项目成本统计总览',0];
+menuList[5]=[101,'级别单价管理',1];
+menuList[6]=[102,'杂项单价管理',1];
+menuList[7]=[103,'人员管理',1];
+menuList[8]=[104,'角色管理',1];
+menuList[9]=[301,'项目成本统计明细',3];
+menuList[10]=[302,'项目组成员考勤',3];
+menuList[11]=[303,'项目基本信息',3];
+const permissionList=new Array();
+permissionList[0]=[1,1,'1,2,3,4','','',new Date(),new Date(),'',''];
+permissionList[1]=[2,2,'1,2,3,4','','',new Date(),new Date(),'',''];
+permissionList[2]=[3,3,'1,2,3,4','','',new Date(),new Date(),'',''];
+permissionList[3]=[4,4,'1,2,3,4','','',new Date(),new Date(),'',''];
+permissionList[4]=[5,5,'1,2,3,4','','',new Date(),new Date(),'',''];
+permissionList[5]=[6,101,'1,2,3,4','','',new Date(),new Date(),'',''];
+permissionList[6]=[7,102,'1,2,3,4','','',new Date(),new Date(),'',''];
+permissionList[7]=[8,103,'1,2,3,4','','',new Date(),new Date(),'',''];
+permissionList[8]=[9,104,'1,2,3,4','','',new Date(),new Date(),'',''];
+permissionList[9]=[10,301,'1,2,3,4','','',new Date(),new Date(),'',''];
+permissionList[10]=[11,302,'1,2,3,4','','',new Date(),new Date(),'',''];
+permissionList[11]=[12,303,'1,2,3,4','','',new Date(),new Date(),'',''];
+const authPermission=new Array();
+authPermission[0]=[101,1,new Date(),new Date(),'',''];
+authPermission[1]=[101,2,new Date(),new Date(),'',''];
+authPermission[2]=[101,3,new Date(),new Date(),'',''];
+authPermission[3]=[101,4,new Date(),new Date(),'',''];
+authPermission[4]=[101,5,new Date(),new Date(),'',''];
+authPermission[5]=[101,6,new Date(),new Date(),'',''];
+authPermission[6]=[101,7,new Date(),new Date(),'',''];
+authPermission[7]=[101,8,new Date(),new Date(),'',''];
+authPermission[8]=[101,9,new Date(),new Date(),'',''];
+authPermission[9]=[101,10,new Date(),new Date(),'',''];
+authPermission[10]=[101,11,new Date(),new Date(),'',''];
+authPermission[11]=[101,12,new Date(),new Date(),'',''];
 var dbInit = function () {
     sql.connect(function (err) {
         if (err) {
@@ -165,7 +163,7 @@ var dbInit = function () {
             })
             sql.query('CREATE TABLE t_budget(  \n' +
                 '  id INT(4) NOT NULL AUTO_INCREMENT COMMENT \'菜单主键\',\n' +
-                '  project_name VARCHAR(100) NOT NULL AUTO_INCREMENT COMMENT \'项目名称\',\n' +
+                '  project_name VARCHAR(100) NOT NULL COMMENT \'项目名称\',\n' +
                 '  leader_id VARCHAR(100) COMMENT \'项目负责人\',\n' +
                 '  projectType int(4) COMMENT \'项目类型\',\n' +
                 '  cate VARCHAR(255) COMMENT \'项目分类\',\n' +
@@ -213,7 +211,7 @@ var dbInit = function () {
                 '`plan_amount_time`  date NULL DEFAULT NULL COMMENT \'计划收款时间\' ,\n' +
                 '`act_amount`  decimal(12,2) NULL ,\n' +
                 '`act_amount_time`  date NULL DEFAULT NULL COMMENT \'实际收款时间\' ,\n' +
-                'ALTER TABLE `t_budget_details` ADD CONSTRAINT `projectId` FOREIGN KEY (`project_id`) REFERENCES `t_budget` (`id`);\n' +
+                'foreign key(project_id) references t_budget(id)\n' +
                 ')ENGINE=INNODB CHARSET=utf8 COLLATE=utf8_general_ci', function (err) {
                 !err ? console.log('t_budget_details 预算详情表创建成功') : console.log(err)
             })
@@ -268,8 +266,7 @@ var dbInit = function () {
                 '  time_count DECIMAL(12,2) COMMENT \'人天总计\',\n' +
                 '  month_count DECIMAL(10,2) COMMENT \'月份总计\',\n' +
                 '  remark1 VARCHAR(255) COMMENT \'备用字段\',\n' +
-                '  remark2 VARCHAR(255) COMMENT \'备用字段\',\n' +
-                ') ENGINE=INNODB CHARSET=utf8 COLLATE=utf8_general_ci', function (err) {
+                '  remark2 VARCHAR(255) COMMENT \'备用字段\'  ) ENGINE=INNODB CHARSET=utf8 COLLATE=utf8_general_ci', function (err) {
                 !err ? console.log('t_cost_list表创建成功') : console.log(err)
             })
             sql.query('CREATE TABLE t_cate(  \n' +
@@ -352,19 +349,17 @@ var dbInit = function () {
                 !err ? console.log('t_attendance表创建成功') : console.log(err)
             });
             //存过
-            sql.query('DELIMITER $$\n' +
-                'DROP PROCEDURE IF EXISTS getInsertAttendance $$\n' +
-                'CREATE PROCEDURE getInsertAttendance(id int(4))\n' +
+            sql.query('CREATE PROCEDURE getInsertAttendance(id int(4))\n' +
                 'BEGIN\n' +
                 'DECLARE done INT DEFAULT 0;\n' +
                 'DECLARE userName varchar(50) DEFAULT NULL;\n' +
-                'DECLARE cur_1 CURSOR FOR\n' +
+                'DECLARE cur1 CURSOR FOR \n' +
                 'select a.user_name from t_cost_list a where a.id=id;\n' +
                 'DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;\n' +
-                'open cur_1;\n' +
-                'REPEAT\n' +
-                'FETCH cur_1 INTO userName;\n' +
-                'if not done then\n' +
+                'open cur1;\n' +
+                'REPEAT \n' +
+                'FETCH cur1 INTO userName;\n' +
+                'if not done then \n' +
                 'select @attenTimeCount:=count(a.atten_time),@maxAttenTime:=max(a.atten_time), @minAttenTime:=min(a.atten_time) from t_attendance a where a.project_id=id and a.user_name=userName;\n' +
                 'select @differDate:=TIMESTAMPDIFF(MONTH,b.entry_time,b.exit_time),@entry_time:=B.entry_time,@exit_time:=B.exit_time from t_cost_list b where b.id=id and b.user_name=userName;\n' +
                 'set @differEntryMonth=PERIOD_DIFF(DATE_FORMAT(@minAttenTime,\'\%Y\%m\'),DATE_FORMAT(@entry_time,\'\%Y\%m\'));\n' +
@@ -385,10 +380,9 @@ var dbInit = function () {
                 'END while;\n' +
                 'end if;\n' +
                 'UNTIL done END REPEAT;\n' +
-                'CLOSE cur_1;\n' +
-                'END $$\n' +
-                'DELIMITER ;', function (err) {
-                !err ? console.log('考勤信息创建成功') : console.log(err)
+                'CLOSE cur1;\n' +
+                'END ;\n' , function (err) {
+                !err ? console.log('考勤信息创建成功') : console.log('考勤信息创建失败',err)
             });
 //ALTER TABLE `t_cost_list` ADD CONSTRAINT `foreign_key` FOREIGN KEY (`id`) REFERENCES `t_cost` (`id`)
             sql.query('ALTER TABLE `t_cost_list` ADD CONSTRAINT `foreign_key` FOREIGN KEY (`id`) REFERENCES `t_cost` (`id`)\n', function (err) {
@@ -414,7 +408,7 @@ var dbInit = function () {
             sql.query('insert into auth_role set ?', {
                 id: 101,
                 name: '管理员',
-                desc: '拥有所有权限',
+                descr: '拥有所有权限',
                 is_enabled: 1,
                 create_time: new Date(),
                 update_time: new Date(),
@@ -422,6 +416,22 @@ var dbInit = function () {
                 remark2: ''
             }, function (err) {
                 !err ? console.log('角色数据初始化成功') : console.log(err)
+            });
+            sql.query('insert into auth_user_role set ?', {
+                user_id: 1,
+                role_id: 101,
+                create_time: new Date(),
+                update_time: new Date(),
+                remark1: '',
+                remark2: ''
+            }, function (err) {
+                !err ? console.log('用户角色数据初始化成功') : console.log(err)
+            });
+            sql.query('insert into auth_permission(id,resource_id,operation_id,name,descr,create_time,update_time,remark1,remark2) values ?', [permissionList], function (err) {
+                !err ? console.log('权限配置初始化成功') : console.log(err)
+            });
+            sql.query('insert into auth_role_permission(role_id,permission_id,create_time,update_time,remark1,remark2) values ?', [authPermission], function (err) {
+                !err ? console.log('角色权限配置初始化成功') : console.log(err)
             });
             sql.query('insert into t_cate(name,create_time,update_time) values ?',[cateList], function (err) {
                 !err ? console.log('t_cate数据初始化成功') : console.log(err)

@@ -436,7 +436,7 @@ app.post('/getRolePermission', function (req, res) {
 });
 // 获取角色对应的页面权限
 app.post('/getPermissionByRole', function (req, res) {
-    sql.query('SELECT a.id,a.name,(CASE WHEN C.role_id = "' + req.body.roleId + '" THEN 1 ELSE 0 END) as auth,a.parent_id FROM t_menu a LEFT JOIN auth_permission b ON a.id = b.resource_id left join (select * from auth_role_permission where role_Id = "' + req.body.roleId + '") c on b.id = c.permission_id', function (err, rows) {
+    sql.query('SELECT a.id,a.name,(CASE WHEN C.role_id = "' + req.body.roleId + '" THEN 1 ELSE 0 END) as auth,a.parent_id,b.id as permission_id FROM t_menu a LEFT JOIN auth_permission b ON a.id = b.resource_id left join (select * from auth_role_permission where role_Id = "' + req.body.roleId + '") c on b.id = c.permission_id', function (err, rows) {
         if (err) {
             res.send({code: 0})
         } else {
@@ -447,7 +447,67 @@ app.post('/getPermissionByRole', function (req, res) {
         }
     })
 });
+//得到操作权限
+app.post('/getPermission', function (req, res) {
+    sql.query('SELECT * from auth_permission ', function (err, rows) {
+        if (err) {
+            res.send({code: 0})
+        } else {
+            res.send({
+                code: 1,
+                permissionList: rows
+            })
+        }
+    })
+});
 
+// 新增角色
+app.post('/insertRole', function (req, res) {
+    const data=req.body.list;
+    let names=new Array();
+    let permissions=new Array();
+    for(let i=0;i<data.length;i++){
+        names[i]=[data[i].name];
+    }
+    sql.query('insert into auth_role(name) values ?',[names], function (err, rows) {
+        if (err) {
+
+            res.send({code: 0,err:err})
+        } else {
+            res.send({
+                code: 1
+            })
+        }
+    })
+});
+// 新增角色对应的页面权限
+app.post('/insertPermissionByRole', function (req, res) {
+    const data=req.body.list;
+    console.log('data',data);
+    let permissions=new Array();
+    if(data){
+        for(let i=0;i<data.length;i++){
+            permissions[i]=[data[i].roleId,data[i].permission_id];
+        }
+    }
+    
+    sql.query('delete from auth_role_permission where role_id=?',[req.body.roleId], function (err, rows) {
+        if (err) {
+            res.send({code: 0,err:err})
+        } else {
+            sql.query('insert into auth_role_permission(role_id,permission_id) values ?',[permissions], function (err1, rows) {
+                if (err1) {
+                    res.send({code: 0,err:err1})
+                } else {
+                    res.send({
+                        code: 1
+                    })
+                }
+            })
+        }
+    })
+    
+});
 //项目预算总览
 app.post('/getProjectBudget', function (req, res) {
     let querySql = 'select * from t_budget';
